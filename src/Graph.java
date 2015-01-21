@@ -93,11 +93,16 @@ public class Graph
 					le=INT(line.split(" "));
 					Edge e=new Edge(k-1-N, V[le[0]], V[le[1]], (le[2]==2), le[3], le[4]);
 					E[k-1-N]=e;
-					
+					//ajout des voisins
+					V[le[0]].addVoisin(e, V[le[1]]);
+					if (le[2]==2)
+					{
+						V[le[1]].addVoisin(e, V[le[0]]);
+					}
 				}
 				
 			}
-			br.close(); 
+			br.close();
 		}
 		catch(IOException e){
 			System.out.println("Erreur d'initialisation du graphe!");
