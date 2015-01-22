@@ -15,6 +15,15 @@ public class Solution {
 		a.run();
 		
 		System.out.println("La solution a été trouvée");
+		int v=0;
+		for (int i=0;i<g.E.length; i++)
+		{
+			if (g.E[i].visited())
+			{
+				v++;
+			}
+		}
+		System.out.println("visite: "+v);
 
 	}
 

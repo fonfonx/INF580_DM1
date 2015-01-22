@@ -61,8 +61,7 @@ public class Car
 			{
 				vertex=edge.A;
 			}
-			dist=dist+edge.dist;
-			travel.add(vertex);
+			add(edge,vertex);
 		}
 	}
 
@@ -74,6 +73,7 @@ public class Car
 			if (!e.visited())
 			{
 				dist=dist+e.dist;
+				e.visite=true;
 			}
 			
 		}
@@ -127,7 +127,6 @@ public class Car
 			float d=interet(vertex,prof,prof,0,0,null);
 			//System.out.println(d);
 			edge=nextEdge;
-			edge.visite=true;
 			prop++;
 			onVertex=false;
 			updateNewVertex();
