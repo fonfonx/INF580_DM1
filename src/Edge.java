@@ -10,6 +10,7 @@ public class Edge
 	int dist; //distance en m
 	boolean visite; //si on est déjà passé par cette rue
 	boolean virtualVisite;
+	int nbVisites;
 	
 	//constructeur
 	public Edge(int i, Vertex AA, Vertex BB, boolean ds, int c, int d)
@@ -22,6 +23,7 @@ public class Edge
 		dist=d;
 		visite=false;
 		virtualVisite=false;
+		nbVisites=0;
 	}
 	
 	public boolean visited()

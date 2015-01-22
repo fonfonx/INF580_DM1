@@ -47,9 +47,14 @@ public class Algorithm
 		int t=0;
 		while (t<g.T)
 		{
+			if (t%1000==0)
+			{
+				System.out.println((float)t/540+" %");
+			}
+			
 			for (int i=0; i<N; i++)
 			{
-				cars[i].nextMove();
+				cars[i].nextMove(t,i);
 			}			
 			t++;
 		}

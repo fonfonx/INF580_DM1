@@ -77,6 +77,7 @@ public class Car
 			}
 			e.visite=true;
 			v.visite++;
+			e.nbVisites++;
 
 		}
 	}
@@ -105,7 +106,7 @@ public class Car
 					first=ea;
 				}
 				int visite=(ea.virtualVisite || ea.visite)?0:1;
-				int trop=(actuel.vAccess.get(i).visite>=3*actuel.vAccess.get(i).vAccess.size())?0:1;
+				int trop=(actuel.vAccess.get(i).visite>=2*actuel.vAccess.get(i).vAccess.size()+1)?0:1;
 				//System.out.println(visite);
 				ancienVisite=ea.virtualVisite;
 				ea.virtualVisite=true;
@@ -127,6 +128,11 @@ public class Car
 				ea.virtualVisite=ancienVisite;
 				l.add(d);
 				le.add(first);
+				if (ea.nbVisites>=10)
+				{
+					assert(d==0);
+				}
+				
 				//System.out.println("Ajout de: "+d+" associé à l'arête "+first.toString());
 			}
 			float rep=Utils.max(l);
@@ -145,8 +151,9 @@ public class Car
 		}
 	}
 
-	public void nextMove()
+	public void nextMove(int t, int i)
 	{
+		//System.out.println("temps: "+t+ "voiture: "+i);
 		if (onVertex)
 		{
 			int prof=Utils.PROFONDEUR;
