@@ -9,6 +9,7 @@ public class Edge
 	int cout; //coût en s
 	int dist; //distance en m
 	boolean visite; //si on est déjà passé par cette rue
+	boolean virtualVisite;
 	
 	//constructeur
 	public Edge(int i, Vertex AA, Vertex BB, boolean ds, int c, int d)
@@ -20,6 +21,7 @@ public class Edge
 		cout=c;
 		dist=d;
 		visite=false;
+		virtualVisite=false;
 	}
 	
 	public boolean visited()

@@ -27,7 +27,7 @@ public class Vertex
 	
 	public String toString()
 	{
-		String s="Je suis le noeud "+id;
+		String s=Integer.toString(id);
 		return s;
 	}
 	

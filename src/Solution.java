@@ -6,12 +6,15 @@ public class Solution {
 		Graph g=new Graph();
 		g.init("paris_54000.txt");
 		System.out.println("Le graphe a été initié");
-		System.out.println("La solution n'est pas encore trouvée");
-		Vertex v=g.V[4516];
-		for (int i=0; i<v.vAccess.size();i++)
+		Car[] tab=new Car[g.C];
+		for (int i=0; i<g.C; i++)
 		{
-			System.out.println(v.vAccess.get(i).toString());
+			tab[i]=new Car(i,Utils.colors[i],true,null,g.V[g.S]);
 		}
+		Algorithm a=new Algorithm(g,tab);
+		a.run();
+		
+		System.out.println("La solution a été trouvée");
 
 	}
 
