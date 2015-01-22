@@ -24,7 +24,8 @@ public class Car
 		travel=new ArrayList<Vertex>();
 		travel.add(vv);
 		prop=0;
-		
+		vv.visite++;
+
 	}
 
 	public int getDist()
@@ -73,9 +74,10 @@ public class Car
 			if (!e.visited())
 			{
 				dist=dist+e.dist;
-				e.visite=true;
 			}
-			
+			e.visite=true;
+			v.visite++;
+
 		}
 	}
 
@@ -93,24 +95,48 @@ public class Car
 		{
 			ArrayList<Float> l=new ArrayList<Float>();
 			ArrayList<Edge> le= new ArrayList<Edge>();
+			Edge ea;
+			boolean ancienVisite;
 			for (int i=0; i<actuel.eAccess.size();i++)
 			{
+				ea=actuel.eAccess.get(i);
 				if (iter==itermax)
 				{
-					first=actuel.eAccess.get(i);
+					first=ea;
 				}
-				actuel.eAccess.get(i).virtualVisite=false;
-				int visite=actuel.eAccess.get(i).virtualVisite || actuel.eAccess.get(i).visite?0:1;
-				float d=interet(actuel.vAccess.get(i),iter-1,itermax, dist+visite*actuel.eAccess.get(i).dist,cout+actuel.eAccess.get(i).cout,first);
-				actuel.eAccess.get(i).virtualVisite=true;
+				int visite=(ea.virtualVisite || ea.visite)?0:1;
+				int trop=(actuel.vAccess.get(i).visite>=3*actuel.vAccess.get(i).vAccess.size())?0:1;
+				//System.out.println(visite);
+				ancienVisite=ea.virtualVisite;
+				ea.virtualVisite=true;
+				assert(ea.A==actuel.vAccess.get(i)||ea.B==actuel.vAccess.get(i));
+				/*if (first.id==5275)
+				{
+					//System.out.println("le fameux");
+					if (iter==itermax)
+					{
+						System.out.println("bool="+visite);
+					}
+					if (iter==itermax-1)
+					{
+						System.out.println(dist+" "+cout);
+					}
+				}*/
+				float d=trop*interet(actuel.vAccess.get(i),iter-1,itermax, dist+visite*trop*ea.dist,cout+ea.cout,first);
+				assert(d==trop||trop==1);
+				ea.virtualVisite=ancienVisite;
 				l.add(d);
 				le.add(first);
-
+				//System.out.println("Ajout de: "+d+" associé à l'arête "+first.toString());
 			}
 			float rep=Utils.max(l);
-			int indice=Utils.argmax(l);
-			Edge e=le.get(indice);
-			nextEdge=e;
+			if (iter==itermax)
+			{
+				int indice=Utils.argmax(l);
+				Edge e=le.get(indice);
+				nextEdge=e;
+				//System.out.println("!!!!!!!!!!!! Choix de "+e.toString()+ " avec interet= "+rep+ "!!!!!!!!!!!!!!!!");
+			}
 			return rep;
 
 
@@ -124,7 +150,11 @@ public class Car
 		if (onVertex)
 		{
 			int prof=Utils.PROFONDEUR;
+			//System.out.println("BEGIN!!");
 			float d=interet(vertex,prof,prof,0,0,null);
+			/*System.out.println("END!!");
+			System.out.println();
+			System.out.println();*/
 			//System.out.println(d);
 			edge=nextEdge;
 			prop++;

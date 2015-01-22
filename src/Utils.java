@@ -2,7 +2,7 @@ import java.util.*;
 
 public class Utils {
 
-	public final static int PROFONDEUR=6;
+	public final static int PROFONDEUR=12;
 	
 	public static String[] colors={"Fred","Greenlee","Pinkney","Bluebell","Willem","Greydom","Yellowsubmarine","SiriusBlack"};
 	

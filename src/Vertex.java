@@ -9,6 +9,7 @@ public class Vertex
 	int N; //nombre total d'intersections
 	List<Edge> eAccess; //liste des arêtes accessibles
 	List<Vertex> vAccess; //liste des noeuds accessibles
+	int visite;
 	
 	public Vertex(int i, double la, double lo)
 	{
@@ -17,6 +18,7 @@ public class Vertex
 		lon=lo;
 		eAccess=new ArrayList<Edge>();
 		vAccess=new ArrayList<Vertex>();
+		visite=0;
 	}
 	
 	public void addVoisin(Edge e, Vertex v)

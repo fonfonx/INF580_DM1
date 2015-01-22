@@ -28,4 +28,9 @@ public class Edge
 	{
 		return visite;
 	}
+	
+	public String toString()
+	{
+		return Integer.toString(id);
+	}
 }
