@@ -82,7 +82,7 @@ public class Car
 		}
 	}
 
-	public float interet(Vertex actuel, int iter, int itermax, int dist, int cout, Edge first)
+	public float interet(Vertex actuel, int iter, int itermax, int dist, int cout, Edge first) throws Exception
 	{
 		if (iter==0)
 		{
@@ -105,25 +105,37 @@ public class Car
 				{
 					first=ea;
 				}
+				//booleen indiquant si une arête non explorée est libre
+				boolean libre=(actuel.nbLibres()>=1);
+				//System.out.println(libre);
 				int visite=(ea.virtualVisite || ea.visite)?0:1;
-				int trop=(actuel.vAccess.get(i).visite>=2*actuel.vAccess.get(i).vAccess.size()+1)?0:1;
-				//System.out.println(visite);
+				float coef=libre?5.0f:1.0f;
+				coef=coef/(actuel.vAccess.get(i).visite+1);
+				coef=coef*(1.0f+(float)iter/10.0f);
 				ancienVisite=ea.virtualVisite;
 				ea.virtualVisite=true;
-				assert(ea.A==actuel.vAccess.get(i)||ea.B==actuel.vAccess.get(i));
-				/*if (first.id==5275)
+				float d=coef*interet(actuel.vAccess.get(i),iter-1, itermax, dist+visite*ea.dist,cout+ea.cout,first);
+				ea.virtualVisite=ancienVisite;
+				boolean trop=(actuel.vAccess.get(i).visite>=2*actuel.vAccess.get(i).vAccess.size()+1);
+				if (libre)
 				{
-					//System.out.println("le fameux");
-					if (iter==itermax)
+					if (visite==1)
 					{
-						System.out.println("bool="+visite);
+						l.add(d);
+						le.add(first);
 					}
-					if (iter==itermax-1)
-					{
-						System.out.println(dist+" "+cout);
-					}
-				}*/
-				float d=trop*interet(actuel.vAccess.get(i),iter-1,itermax, dist+visite*trop*ea.dist,cout+ea.cout,first);
+				}
+				else
+				{
+					l.add(d);
+					le.add(first);
+				}
+				/*
+				//int trop=(actuel.vAccess.get(i).visite>=2*actuel.vAccess.get(i).vAccess.size()+1)?0:1;
+				
+				//assert(ea.A==actuel.vAccess.get(i)||ea.B==actuel.vAccess.get(i));
+				//float d=trop*interet(actuel.vAccess.get(i),iter-1,itermax, dist+visite*trop*ea.dist,cout+ea.cout,first);
+				
 				assert(d==trop||trop==1);
 				ea.virtualVisite=ancienVisite;
 				l.add(d);
@@ -132,7 +144,7 @@ public class Car
 				{
 					assert(d==0);
 				}
-				
+				*/
 				//System.out.println("Ajout de: "+d+" associé à l'arête "+first.toString());
 			}
 			float rep=Utils.max(l);
@@ -151,7 +163,7 @@ public class Car
 		}
 	}
 
-	public void nextMove(int t, int i)
+	public void nextMove(int t, int i) throws Exception
 	{
 		//System.out.println("temps: "+t+ "voiture: "+i);
 		if (onVertex)

@@ -33,6 +33,24 @@ public class Vertex
 		return s;
 	}
 	
+	public int nbLibres()
+	{
+		int rep=0;
+		for (int i=0; i<eAccess.size(); i++)
+		{
+			if (!(eAccess.get(i).visite||eAccess.get(i).virtualVisite))
+			{
+				rep++;
+			}
+		}
+		return rep;
+	}
+	
+	public float fracLibres()
+	{
+		return (float)nbLibres()/eAccess.size();
+	}
+	
 	
 	
 	

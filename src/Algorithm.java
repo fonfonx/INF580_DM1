@@ -42,7 +42,7 @@ public class Algorithm
 		}
 	}
 	
-	public void run()
+	public void run() throws Exception
 	{
 		int t=0;
 		while (t<g.T)

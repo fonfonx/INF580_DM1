@@ -12,7 +12,13 @@ public class Solution {
 			tab[i]=new Car(i,Utils.colors[i],true,null,g.V[g.S]);
 		}
 		Algorithm a=new Algorithm(g,tab);
-		a.run();
+		try {
+			a.run();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+		}
 		
 		System.out.println("La solution a été trouvée");
 		int v=0;
@@ -24,6 +30,17 @@ public class Solution {
 			}
 		}
 		System.out.println("visite: "+v);
+		
+		int dtot=0;
+		int ctot=0;
+		for (int i=0; i<g.E.length;i++)
+		{
+			dtot=dtot+g.E[i].dist;
+			ctot=ctot+g.E[i].cout;
+		}
+		
+		System.out.println("dist tot: "+dtot);
+		System.out.println("cout tot: "+ctot);
 
 	}
 

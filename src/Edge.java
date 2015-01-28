@@ -35,4 +35,20 @@ public class Edge
 	{
 		return Integer.toString(id);
 	}
+	
+	public Vertex autreExt(Vertex v) throws Exception
+	{
+		if (A==v)
+		{
+			return B;
+		}
+		if (B==v)
+		{
+			return A;
+		}
+		else
+		{
+			throw new Exception("non");
+		}
+	}
 }
