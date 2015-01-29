@@ -16,10 +16,26 @@ public class Algorithm
 	public void output()
 	{
 		File f = new File ("output.txt");
-		 
+		File[] tab = new File[8];
+		tab[0] = new File ("f1.txt");
+		tab[1] = new File ("f2.txt");
+		tab[2] = new File ("f3.txt");
+		tab[3] = new File ("f4.txt");
+		tab[4] = new File ("f5.txt");
+		tab[5] = new File ("f6.txt");
+		tab[6] = new File ("f7.txt");
+		tab[7] = new File ("f8.txt");
+		
 		try
 		{
 		    FileWriter fw = new FileWriter (f);
+		    FileWriter[] tabfw = new FileWriter[8];
+		    for (int i=0; i<8; i++)
+		    {
+		    	tabfw[i]=new FileWriter(tab[i]);
+		    	tabfw[i].write(String.valueOf(1));
+		    	tabfw[i].write("\n");
+		    }
 		    fw.write(String.valueOf(N));
 		    fw.write("\n");
 		 
@@ -27,14 +43,22 @@ public class Algorithm
 		    {
 		        fw.write (String.valueOf (cars[i].travel.size()));
 		        fw.write ("\n");
+		        tabfw[i].write(String.valueOf (cars[i].travel.size()));
+		        tabfw[i].write("\n");
 		        for (int j=0;j<cars[i].travel.size();j++)
 		        {
 		        	fw.write(cars[i].travel.get(j).toString());
 		        	fw.write("\n");
+		        	tabfw[i].write(cars[i].travel.get(j).toString());
+		        	tabfw[i].write("\n");
 		        }
 		    }
 		 
 		    fw.close();
+		    for (int i=0; i<8; i++)
+		    {
+		    	tabfw[i].close();
+		    }
 		}
 		catch (IOException exception)
 		{

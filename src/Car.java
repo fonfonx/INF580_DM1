@@ -111,12 +111,12 @@ public class Car
 				int visite=(ea.virtualVisite || ea.visite)?0:1;
 				float coef=libre?5.0f:1.0f;
 				coef=coef/(actuel.vAccess.get(i).visite+1);
-				coef=coef*(1.0f+(float)iter/10.0f);
+				coef=coef*(1.0f+(float)iter/4.0f);
 				ancienVisite=ea.virtualVisite;
 				ea.virtualVisite=true;
 				float d=coef*interet(actuel.vAccess.get(i),iter-1, itermax, dist+visite*ea.dist,cout+ea.cout,first);
 				ea.virtualVisite=ancienVisite;
-				boolean trop=(actuel.vAccess.get(i).visite>=2*actuel.vAccess.get(i).vAccess.size()+1);
+				//boolean trop=(actuel.vAccess.get(i).visite>=2*actuel.vAccess.get(i).vAccess.size()+1);
 				if (libre)
 				{
 					if (visite==1)
