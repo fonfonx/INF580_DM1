@@ -107,8 +107,8 @@ public class Car
 				}
 				//booleen indiquant si une arête non explorée est libre
 				boolean libre=(actuel.nbLibres()>=1);
-				//System.out.println(libre);
 				int visite=(ea.virtualVisite || ea.visite)?0:1;
+				//coef multiplicatif pour l'heuristique
 				float coef=libre?5.0f:1.0f;
 				coef=coef/(actuel.vAccess.get(i).visite+1);
 				coef=coef*(1.0f+(float)iter/4.0f);
@@ -116,7 +116,6 @@ public class Car
 				ea.virtualVisite=true;
 				float d=coef*interet(actuel.vAccess.get(i),iter-1, itermax, dist+visite*ea.dist,cout+ea.cout,first);
 				ea.virtualVisite=ancienVisite;
-				//boolean trop=(actuel.vAccess.get(i).visite>=2*actuel.vAccess.get(i).vAccess.size()+1);
 				if (libre)
 				{
 					if (visite==1)
@@ -130,22 +129,6 @@ public class Car
 					l.add(d);
 					le.add(first);
 				}
-				/*
-				//int trop=(actuel.vAccess.get(i).visite>=2*actuel.vAccess.get(i).vAccess.size()+1)?0:1;
-				
-				//assert(ea.A==actuel.vAccess.get(i)||ea.B==actuel.vAccess.get(i));
-				//float d=trop*interet(actuel.vAccess.get(i),iter-1,itermax, dist+visite*trop*ea.dist,cout+ea.cout,first);
-				
-				assert(d==trop||trop==1);
-				ea.virtualVisite=ancienVisite;
-				l.add(d);
-				le.add(first);
-				if (ea.nbVisites>=10)
-				{
-					assert(d==0);
-				}
-				*/
-				//System.out.println("Ajout de: "+d+" associé à l'arête "+first.toString());
 			}
 			float rep=Utils.max(l);
 			if (iter==itermax)
@@ -153,7 +136,6 @@ public class Car
 				int indice=Utils.argmax(l);
 				Edge e=le.get(indice);
 				nextEdge=e;
-				//System.out.println("!!!!!!!!!!!! Choix de "+e.toString()+ " avec interet= "+rep+ "!!!!!!!!!!!!!!!!");
 			}
 			return rep;
 
@@ -165,21 +147,14 @@ public class Car
 
 	public void nextMove(int t, int i) throws Exception
 	{
-		//System.out.println("temps: "+t+ "voiture: "+i);
 		if (onVertex)
 		{
 			int prof=Utils.PROFONDEUR;
-			//System.out.println("BEGIN!!");
 			float d=interet(vertex,prof,prof,0,0,null);
-			/*System.out.println("END!!");
-			System.out.println();
-			System.out.println();*/
-			//System.out.println(d);
 			edge=nextEdge;
 			prop++;
 			onVertex=false;
 			updateNewVertex();
-
 		}
 		else
 		{

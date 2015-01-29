@@ -10,7 +10,6 @@ public class Utils {
 	{
 		if (l.size()==0)
 		{
-			//System.out.println("vide!");
 			return 0;
 		}
 		float max=l.get(0);
