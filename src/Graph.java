@@ -10,12 +10,12 @@ public class Graph
 	int T; //temps total
 	int C; //nombre de véhicules
 	int S; //indice du départ
-	
+
 	public static int INT(String s)
 	{
 		return Integer.parseInt(s);
 	}
-	
+
 	public static int[] INT(String[] tab)
 	{
 		int l=tab.length;
@@ -26,12 +26,12 @@ public class Graph
 		}
 		return rep;
 	}
-	
+
 	public static double DBL(String s)
 	{
 		return Double.parseDouble(s);
 	}
-	
+
 	public static double[] DBL(String[] tab)
 	{
 		int l=tab.length;
@@ -42,7 +42,7 @@ public class Graph
 		}
 		return rep;
 	}
-	
+
 	public void setDim(int n, int m, int t, int c, int s)
 	{
 		N=n;
@@ -53,7 +53,7 @@ public class Graph
 		V=new Vertex[n];
 		E=new Edge[m];
 	}
-	
+
 	public void setDim(String[] tabinits)
 	{
 		if (tabinits.length==5)
@@ -66,7 +66,7 @@ public class Graph
 			System.out.println("erreur d'init");
 		}
 	}
-	
+
 	public void init(String fichier)
 	{
 		try{
@@ -100,7 +100,7 @@ public class Graph
 						V[le[1]].addVoisin(e, V[le[0]]);
 					}
 				}
-				
+
 			}
 			br.close();
 		}
@@ -108,6 +108,121 @@ public class Graph
 			System.out.println("Erreur d'initialisation du graphe!");
 			System.out.println(e.getMessage());
 		}
+
+	}
+
+	//diviser le graphe en n composantes connexes
+	public void divise(int n)
+	{
+		//parcours du graphe
+		double latmin=90.0;
+		double latmax=0.0;
+		double longmin=90.0;
+		double longmax=0.0;
+		double lt;
+		double lg;
+		for (int i=0; i<N; i++)
+		{
+			lt=V[i].lat;
+			lg=V[i].lon;
+			if (lt>latmax) {latmax=lt;}
+			if (lt<latmin) {latmin=lt;}
+			if (lg>longmax) {longmax=lg;}
+			if (lg<longmin) {longmin=lg; }
+		}
+		double latmoy=(latmin+latmax)/2;
+		double longmoy=(longmin+longmax)/2;
 		
+		double rayon=Math.sqrt((latmax-latmoy)*(latmax-latmoy)+(longmax-longmoy)*(longmax-longmoy));
+
+		File[] tab = new File[C];
+		tab[0] = new File ("paris1.txt");
+		tab[1] = new File ("paris2.txt");
+		tab[2] = new File ("paris3.txt");
+		tab[3] = new File ("paris4.txt");
+		tab[4] = new File ("paris5.txt");
+		tab[5] = new File ("paris6.txt");
+		tab[6] = new File ("paris7.txt");
+		tab[7] = new File ("paris8.txt");
+		int[] rues = new int[C];
+		int[] crois = new int[C];
+
+		FileWriter[] tabfw = new FileWriter[8];
+		try{
+			for (int i=0; i<8; i++)
+			{
+				tabfw[i]=new FileWriter(tab[i]);
+			}
+			
+			//rangement des sommets dans les sous-graphes
+			double lat;
+			double lon;
+			double cadran;
+			int cad;
+			double eps;
+			for (int i=0; i<N; i++)
+			{
+				lat=V[i].lat-latmoy;
+				lon=V[i].lon-longmoy;
+				cadran=(Math.PI+Math.atan2(lat,lon))/(2*Math.PI/C);
+				cad=(int) cadran;
+				V[i].setSousGraphe(cad);
+				crois[cad]++;
+				eps=cadran-cad;
+				if (eps<=0.1)
+				{
+					V[i].setSousGraphe((cad-1)%C);
+					crois[(cad-1)%C]++;
+				}
+				if (eps>=0.9)
+				{
+					V[i].setSousGraphe((cad+1)%C);
+					crois[(cad+1)%C]++;
+				}
+				if (Math.sqrt(lat*lat+lon*lon)<=0.1*rayon)
+				{
+					V[i].setAllSousGraphes();
+					for (int k=0; k<C; k++)
+					{
+						crois[k]++;
+					}
+				}
+			}
+			
+			//rangements des arêtes dans les sous-graphes
+			for (int i=0; i<M; i++)
+			{
+				for (int k=0; k<C; k++)
+				{
+					if (E[i].putInSousGraphe(k))
+					{
+						rues[k]++;
+					}
+				}
+			}
+			
+			for (int k=0; k<C; k++)
+			{
+				tabfw[k].write(crois[k]+" "+rues[k]+" "+T+" "+1+" "+S+"\n");
+			}
+			
+			
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("Erreur d'écriture des fichiers paris intermédiaires");
+		}
+
+
+		//à faire:
+		//créer N fichiers txt
+		//mettre les croisements dans chacun des 8 fichiers
+		//pour cela faire une fonction angle, et essayer de rester général (N et pas 8)
+		//faire les bandes d'overlap
+		//compter les arêtes écrites et les noeuds aussi et voir si la somme est bien
+		//vérifier la bonne répartition entre les N sous-graphes
+
+
 	}
 }

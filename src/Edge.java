@@ -12,6 +12,11 @@ public class Edge
 	boolean virtualVisite;
 	int nbVisites;
 	
+	//pour la méthode moins naïve
+	int voitures;
+	boolean[] soustab;
+	boolean place; //pour savoir si on a placé l'arête dans un sous-graphe
+	
 	//constructeur
 	public Edge(int i, Vertex AA, Vertex BB, boolean ds, int c, int d)
 	{
@@ -24,6 +29,14 @@ public class Edge
 		visite=false;
 		virtualVisite=false;
 		nbVisites=0;
+		
+		voitures=8;
+		place=false;
+		soustab=new boolean[voitures];
+		for (int k=0; k<voitures; k++)
+		{
+			soustab[k]=false;
+		}
 	}
 	
 	public boolean visited()
@@ -50,5 +63,16 @@ public class Edge
 		{
 			throw new Exception("non");
 		}
+	}
+	
+	public boolean putInSousGraphe(int i)
+	{
+		if (A.isInSousGraphe(i) && B.isInSousGraphe(i))
+		{
+			soustab[i]=true;
+			place=true;
+			return true;
+		}
+		return false;
 	}
 }
