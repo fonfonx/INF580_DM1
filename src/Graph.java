@@ -1,7 +1,5 @@
 import java.io.*;
 
-import javax.swing.text.html.HTMLDocument.HTMLReader.IsindexAction;
-
 
 public class Graph 
 {
@@ -112,8 +110,11 @@ public class Graph
 		}
 
 	}
-	
-	
+
+	/********************************************
+	 ************METHODE MOINS NAIVE**************
+	 *********************************************/
+
 
 	//diviser le graphe en n composantes connexes
 	public void divise(int n)
@@ -136,7 +137,7 @@ public class Graph
 		}
 		double latmoy=(latmin+latmax)/2;
 		double longmoy=(longmin+longmax)/2;
-		
+
 		double rayon=Math.sqrt((latmax-latmoy)*(latmax-latmoy)+(longmax-longmoy)*(longmax-longmoy));
 
 		File[] tab = new File[C];
@@ -159,41 +160,55 @@ public class Graph
 				tabfw[i]=new FileWriter(tab[i]);
 			}
 			
+			boolean first=false;
+			int indice_depart;
 			//rangement des sommets dans les sous-graphes
 			double lat;
 			double lon;
 			double cadran;
 			int cad;
 			double eps;
+			double r;
+			double eps_lim;
 			for (int i=0; i<N; i++)
 			{
 				lat=V[i].lat-latmoy;
 				lon=V[i].lon-longmoy;
-				cadran=(Math.PI+Math.atan2(lat,lon))/(2*Math.PI/C);
-				cad=(int) cadran;
-				V[i].setSousGraphe(cad);
-				crois[cad]++;
-				eps=cadran-cad;
-				if (eps<=0.1)
-				{
-					V[i].setSousGraphe(Utils.mod(cad-1,C));
-					crois[Utils.mod(cad-1,C)]++;
-				}
-				if (eps>=0.9)
-				{
-					V[i].setSousGraphe(Utils.mod(cad+1,C));
-					crois[Utils.mod(cad+1,C)]++;
-				}
-				if (Math.sqrt(lat*lat+lon*lon)<=0.1*rayon)
+				r=Math.sqrt(lat*lat+lon*lon);
+				if (r<=0.1*rayon)
 				{
 					V[i].setAllSousGraphes();
 					for (int k=0; k<C; k++)
 					{
 						crois[k]++;
 					}
+					if (!first)
+					{
+						indice_depart=i;
+						first=true;
+					}
+				}
+				else
+				{
+					cadran=(Math.PI+Math.atan2(lat,lon))/(2*Math.PI/C);
+					cad=(int) cadran;
+					V[i].setSousGraphe(cad);
+					crois[cad]++;
+					eps=cadran-cad;
+					eps_lim=rayon/(12.1*r);
+					if (eps<=eps_lim)
+					{
+						V[i].setSousGraphe(Utils.mod(cad-1,C));
+						crois[Utils.mod(cad-1,C)]++;
+					}
+					if (eps>=1-eps_lim)
+					{
+						V[i].setSousGraphe(Utils.mod(cad+1,C));
+						crois[Utils.mod(cad+1,C)]++;
+					}
 				}
 			}
-			
+
 			//rangements des arêtes dans les sous-graphes
 			for (int i=0; i<M; i++)
 			{
@@ -205,25 +220,28 @@ public class Graph
 					}
 				}
 			}
-			
+
 			//ecriture de la 1re ligne
 			for (int k=0; k<C; k++)
 			{
-				tabfw[k].write(crois[k]+" "+rues[k]+" "+T+" "+1+" "+S+"\n");
+				tabfw[k].write(crois[k]+" "+rues[k]+" "+T+" "+1+" "+0+"\n");
 			}
-			
+
 			//ecriture des croisements
 			for (int k=0; k<C; k++)
 			{
+				int ligne=0;
 				for (int i=0; i<N; i++)
 				{
 					if (V[i].isInSousGraphe(k))
 					{
 						tabfw[k].write(V[i].lat+" "+V[i].lon+"\n");
+						V[i].indices[k]=ligne;
+						ligne++;
 					}
 				}
 			}
-			
+
 			//ecriture des rues
 			for (int k=0; k<C; k++)
 			{
@@ -233,16 +251,21 @@ public class Graph
 				{
 					e=E[i];
 					ds=e.DS?2:1;
-					assert(e.place);
+					if (!e.place){	System.out.println(e.place);}
 					if (e.isInSousGraphe(k))
 					{
-						tabfw[k].write(e.A.id+" "+e.B.id+" "+ds+" "+e.cout+" "+e.dist+"\n");
+						tabfw[k].write(e.A.indices[k]+" "+e.B.indices[k]+" "+ds+" "+e.cout+" "+e.dist+"\n");
 					}
 				}
 			}
 			
+			for (int k=0; k<C; k++)
+		    {
+		    	tabfw[k].close();
+		    }
+
 			System.out.println("ecriture des fichiers paris finie");
-			
+
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

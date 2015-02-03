@@ -4,9 +4,11 @@ public class Solution {
 	public static void main(String[] args) {
 		System.out.println("Construction du Graphe");
 		Graph g=new Graph();
-		g.init("paris_54000.txt");
+		//g.init("paris_54000.txt");
 		System.out.println("Le graphe a été initialisé");
-		g.divise(g.C);
+		//g.divise(g.C);
+		System.out.println("division finie");
+		g.init("paris1.txt");
 		Car[] tab=new Car[g.C];
 		for (int i=0; i<g.C; i++)
 		{

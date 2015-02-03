@@ -14,6 +14,7 @@ public class Vertex
 	//pour la méthode moins naïve
 	int voitures;
 	boolean[] soustab;
+	int[] indices; //contient l'indice du croisement dans le nouveau fichier paris
 	
 	
 	public Vertex(int i, double la, double lo)
@@ -26,6 +27,7 @@ public class Vertex
 		visite=0;
 		voitures=8;
 		soustab=new boolean[voitures];
+		indices=new int[voitures];
 		for (int k=0; k<voitures; k++)
 		{
 			soustab[k]=false;
