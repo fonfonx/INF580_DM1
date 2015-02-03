@@ -5,7 +5,8 @@ public class Solution {
 		System.out.println("Construction du Graphe");
 		Graph g=new Graph();
 		g.init("paris_54000.txt");
-		System.out.println("Le graphe a été initalisé");
+		System.out.println("Le graphe a été initialisé");
+		g.divise(g.C);
 		Car[] tab=new Car[g.C];
 		for (int i=0; i<g.C; i++)
 		{

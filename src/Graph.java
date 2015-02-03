@@ -1,5 +1,7 @@
 import java.io.*;
 
+import javax.swing.text.html.HTMLDocument.HTMLReader.IsindexAction;
+
 
 public class Graph 
 {
@@ -110,6 +112,8 @@ public class Graph
 		}
 
 	}
+	
+	
 
 	//diviser le graphe en n composantes connexes
 	public void divise(int n)
@@ -144,6 +148,7 @@ public class Graph
 		tab[5] = new File ("paris6.txt");
 		tab[6] = new File ("paris7.txt");
 		tab[7] = new File ("paris8.txt");
+		//nb de rues et de croisements dans chaque quartier
 		int[] rues = new int[C];
 		int[] crois = new int[C];
 
@@ -171,13 +176,13 @@ public class Graph
 				eps=cadran-cad;
 				if (eps<=0.1)
 				{
-					V[i].setSousGraphe((cad-1)%C);
-					crois[(cad-1)%C]++;
+					V[i].setSousGraphe(Utils.mod(cad-1,C));
+					crois[Utils.mod(cad-1,C)]++;
 				}
 				if (eps>=0.9)
 				{
-					V[i].setSousGraphe((cad+1)%C);
-					crois[(cad+1)%C]++;
+					V[i].setSousGraphe(Utils.mod(cad+1,C));
+					crois[Utils.mod(cad+1,C)]++;
 				}
 				if (Math.sqrt(lat*lat+lon*lon)<=0.1*rayon)
 				{
@@ -201,11 +206,42 @@ public class Graph
 				}
 			}
 			
+			//ecriture de la 1re ligne
 			for (int k=0; k<C; k++)
 			{
 				tabfw[k].write(crois[k]+" "+rues[k]+" "+T+" "+1+" "+S+"\n");
 			}
 			
+			//ecriture des croisements
+			for (int k=0; k<C; k++)
+			{
+				for (int i=0; i<N; i++)
+				{
+					if (V[i].isInSousGraphe(k))
+					{
+						tabfw[k].write(V[i].lat+" "+V[i].lon+"\n");
+					}
+				}
+			}
+			
+			//ecriture des rues
+			for (int k=0; k<C; k++)
+			{
+				Edge e;
+				int ds;
+				for (int i=0;i<M; i++)
+				{
+					e=E[i];
+					ds=e.DS?2:1;
+					assert(e.place);
+					if (e.isInSousGraphe(k))
+					{
+						tabfw[k].write(e.A.id+" "+e.B.id+" "+ds+" "+e.cout+" "+e.dist+"\n");
+					}
+				}
+			}
+			
+			System.out.println("ecriture des fichiers paris finie");
 			
 
 		} catch (IOException e) {

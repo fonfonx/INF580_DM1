@@ -75,4 +75,9 @@ public class Edge
 		}
 		return false;
 	}
+	
+	public boolean isInSousGraphe(int i)
+	{
+		return soustab[i];
+	}
 }

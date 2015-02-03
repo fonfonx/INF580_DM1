@@ -42,5 +42,10 @@ public class Utils {
 		}
 		return arg;
 	}
+	
+	public static int mod ( int x , int y )
+    {
+		return x >= 0 ? x % y : y - 1 - ((-x-1) % y) ;
+    }
 }
 
