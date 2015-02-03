@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.Arrays;
 
 
 public class Graph 
@@ -153,68 +154,113 @@ public class Graph
 		int[] rues = new int[C];
 		int[] crois = new int[C];
 
+		Edge[] aretes=new Edge[M];
+		for (int i=0; i<M; i++)
+		{
+			aretes[i]=E[i];
+		}
+		Arrays.sort(aretes);
+
 		FileWriter[] tabfw = new FileWriter[8];
 		try{
 			for (int i=0; i<8; i++)
 			{
 				tabfw[i]=new FileWriter(tab[i]);
 			}
-			
-			boolean first=false;
-			int indice_depart;
-			//rangement des sommets dans les sous-graphes
-			double lat;
-			double lon;
-			double cadran;
-			int cad;
-			double eps;
-			double r;
-			double eps_lim;
-			for (int i=0; i<N; i++)
+
+			int place=0; //nb d'aretes placées
+			int comp=0; //nb de composantes actuellement créées
+			int[] cout = new int[C]; //cout de chacune des composantes
+			Edge a;
+			while(place<M)
 			{
-				lat=V[i].lat-latmoy;
-				lon=V[i].lon-longmoy;
-				r=Math.sqrt(lat*lat+lon*lon);
-				if (r<=0.1*rayon)
+				for (int i=M-1; i>=0; i--)
 				{
-					V[i].setAllSousGraphes();
-					for (int k=0; k<C; k++)
+					a=aretes[i];
+					if (!a.place)
 					{
-						crois[k]++;
-					}
-					if (!first)
-					{
-						indice_depart=i;
-						first=true;
-					}
-				}
-				else
-				{
-					cadran=(Math.PI+Math.atan2(lat,lon))/(2*Math.PI/C);
-					cad=(int) cadran;
-					V[i].setSousGraphe(cad);
-					crois[cad]++;
-					eps=cadran-cad;
-					eps_lim=rayon/(12.1*r);
-					if (eps<=eps_lim)
-					{
-						V[i].setSousGraphe(Utils.mod(cad-1,C));
-						crois[Utils.mod(cad-1,C)]++;
-					}
-					if (eps>=1-eps_lim)
-					{
-						V[i].setSousGraphe(Utils.mod(cad+1,C));
-						crois[Utils.mod(cad+1,C)]++;
+						int[] choix=new int[C];
+						int m2=0;
+						int coul1=1;
+						int coul2=1;
+						int coul=0;
+						int m1=0;
+						for (int k=0; k<C;k++)
+						{
+							//faire l'Union find si on peut et mettre un break si oui... (ou pas en fait)
+							//deux extremites meme couleur
+							if (a.A.isInSousGraphe(k) && a.B.isInSousGraphe(k))
+							{
+								choix[k]=2;
+								m2++;
+								coul2=k;
+							}
+							else if (a.A.isInSousGraphe(k)||a.B.isInSousGraphe(k))
+							{
+								choix[k]=1;
+								m1++;
+								coul1=k;
+							}
+						}
+						if (m2==1)
+						{
+							a.place(coul2);
+							place++;
+							cout[coul2]=cout[coul2]+a.cout;
+							//break;
+						}
+						else if (m2>=2)
+						{
+							coul=a.traitement(choix,2,cout);
+							place++;
+							cout[coul]=cout[coul]+a.cout;
+							//break;
+						}
+						else if (m1==1)
+						{
+							a.place(coul1);
+							cout[coul1]=cout[coul1]+a.cout;
+							place++;
+							//break;
+						}
+						else if (m1>=2)
+						{
+							coul=a.traitement(choix,1,cout);
+							cout[coul]=cout[coul]+a.cout;
+							place++;
+							//break;
+						}
+						else
+						{
+							if (comp<C)
+							{
+								a.place(comp);
+								cout[comp]=cout[comp]+a.cout;
+								comp++;
+								place++;
+								//break;
+							}
+						}
 					}
 				}
 			}
 
-			//rangements des arêtes dans les sous-graphes
+			for (int i=0; i<N; i++)
+			{
+				for (int k=0; k<C; k++)
+				{
+					if (V[i].isInSousGraphe(k))
+					{
+						crois[k]++;
+					}
+				}
+			}
+			
 			for (int i=0; i<M; i++)
 			{
 				for (int k=0; k<C; k++)
 				{
-					if (E[i].putInSousGraphe(k))
+					if (E[i].isInSousGraphe(k))
 					{
 						rues[k]++;
 					}
@@ -258,11 +304,11 @@ public class Graph
 					}
 				}
 			}
-			
+
 			for (int k=0; k<C; k++)
-		    {
-		    	tabfw[k].close();
-		    }
+			{
+				tabfw[k].close();
+			}
 
 			System.out.println("ecriture des fichiers paris finie");
 
@@ -272,16 +318,6 @@ public class Graph
 			e.printStackTrace();
 			System.out.println("Erreur d'écriture des fichiers paris intermédiaires");
 		}
-
-
-		//à faire:
-		//créer N fichiers txt
-		//mettre les croisements dans chacun des 8 fichiers
-		//pour cela faire une fonction angle, et essayer de rester général (N et pas 8)
-		//faire les bandes d'overlap
-		//compter les arêtes écrites et les noeuds aussi et voir si la somme est bien
-		//vérifier la bonne répartition entre les N sous-graphes
-
 
 	}
 }

@@ -13,7 +13,7 @@ public class Vertex
 	
 	//pour la méthode moins naïve
 	int voitures;
-	boolean[] soustab;
+	int[] soustab;
 	int[] indices; //contient l'indice du croisement dans le nouveau fichier paris
 	
 	
@@ -26,12 +26,9 @@ public class Vertex
 		vAccess=new ArrayList<Vertex>();
 		visite=0;
 		voitures=8;
-		soustab=new boolean[voitures];
+		soustab=new int[voitures];
 		indices=new int[voitures];
-		for (int k=0; k<voitures; k++)
-		{
-			soustab[k]=false;
-		}
+		
 	}
 	
 	public void addVoisin(Edge e, Vertex v)
@@ -67,7 +64,7 @@ public class Vertex
 	//pour la partie moins naïve
 	public void setSousGraphe(int i)
 	{
-		soustab[i]=true;
+		soustab[i]++;
 	}
 	
 	public void setAllSousGraphes()
@@ -81,7 +78,7 @@ public class Vertex
 	
 	public boolean isInSousGraphe(int i)
 	{
-		return soustab[i];
+		return soustab[i]>=1;
 	}
 	
 	
