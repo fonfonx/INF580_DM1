@@ -116,6 +116,6 @@ public class Edge implements Comparable<Edge>
 	@Override
 	public int compareTo(Edge arg0) {
 		// TODO Auto-generated method stub
-		return dist-arg0.dist;
+		return cout-arg0.cout;
 	}
 }

@@ -8,7 +8,7 @@ public class Solution {
 		System.out.println("Le graphe a été initialisé");
 		//g.divise(g.C);
 		System.out.println("division finie");
-		g.init("paris3.txt");
+		g.init("paris5.txt");
 		Car[] tab=new Car[g.C];
 		for (int i=0; i<g.C; i++)
 		{

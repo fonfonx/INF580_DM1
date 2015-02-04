@@ -168,10 +168,15 @@ public class Graph
 				tabfw[i]=new FileWriter(tab[i]);
 			}
 
-			int place=0; //nb d'aretes placées
+			int place=C; //nb d'aretes placées
 			int comp=0; //nb de composantes actuellement créées
 			int[] cout = new int[C]; //cout de chacune des composantes
 			Edge a;
+			int[] debut = {1293,2579,1714,4673,4985,12379,2346,4600};
+			for (int k=0; k<C; k++)
+			{
+				E[debut[k]].place(k);
+			}
 			while(place<M)
 			{
 				for (int i=M-1; i>=0; i--)
