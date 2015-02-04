@@ -173,7 +173,29 @@ public class Graph
 			{
 				voisins[i]=new PriorityQueue<Edge>();
 			}
-
+			int[] debut = new int[C];
+			debut[0]=1293;
+			debut[1]=2579;
+			debut[2]=1714;
+			debut[3]=4673;
+			debut[4]=4985;
+			debut[5]=12379;
+			debut[6]=2349;
+			debut[7]=4600;
+			
+			Vertex a,b;
+			Edge e;
+			for (int k=0; k<C; k++)
+			{
+				e=E[debut[k]];
+				e.place(k);
+				a=e.A;
+				b=e.B;
+				voisins[k].addAll(a.eAccess);
+				voisins[k].addAll(b.eAccess);
+			}
+			
+			//calcul des tailles...
 			for (int i=0; i<N; i++)
 			{
 				for (int k=0; k<C; k++)
