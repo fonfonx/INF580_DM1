@@ -221,26 +221,29 @@ public class Graph
 							cout[coul]=cout[coul]+a.cout;
 							//break;
 						}
-						else if (m1==1)
+						else if (m1==1 )
 						{
 							a.place(coul1);
 							cout[coul1]=cout[coul1]+a.cout;
 							place++;
+							place=place+a.sensunique(coul1);
 							//break;
 						}
-						else if (m1>=2)
+						else if (m1>=2 )
 						{
 							coul=a.traitement(choix,1,cout);
 							cout[coul]=cout[coul]+a.cout;
 							place++;
+							place=place+a.sensunique(coul);
 							//break;
 						}
 						else
 						{
-							if (comp<C)
+							if (comp<C )
 							{
 								a.place(comp);
 								cout[comp]=cout[comp]+a.cout;
+								//place=place+a.sensunique(comp);
 								comp++;
 								place++;
 								//break;

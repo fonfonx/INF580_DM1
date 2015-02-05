@@ -98,6 +98,12 @@ public class Car
 			ArrayList<Edge> le= new ArrayList<Edge>();
 			Edge ea;
 			boolean ancienVisite;
+			//booleen indiquant si une arête non explorée est libre
+			boolean libre=(actuel.nbLibres()>=1);
+			int bug=0;
+			int debug=0;
+			int debug2=0;
+			int debug3=0;
 			for (int i=0; i<actuel.eAccess.size();i++)
 			{
 				ea=actuel.eAccess.get(i);
@@ -106,7 +112,7 @@ public class Car
 					first=ea;
 				}
 				//booleen indiquant si une arête non explorée est libre
-				boolean libre=(actuel.nbLibres()>=1);
+				//boolean libre=(actuel.nbLibres()>=1);
 				int visite=(ea.virtualVisite || ea.visite)?0:1;
 				//coef multiplicatif pour l'heuristique
 				float coef=libre?5.0f:1.0f;
@@ -116,23 +122,31 @@ public class Car
 				ea.virtualVisite=true;
 				float d=coef*interet(actuel.vAccess.get(i),iter-1, itermax, dist+visite*ea.dist,cout+ea.cout,first);
 				ea.virtualVisite=ancienVisite;
+				debug3++;
 				if (libre)
 				{
 					if (visite==1)
 					{
 						l.add(d);
 						le.add(first);
+						debug++;
+					}
+					else
+					{
+						bug++;
 					}
 				}
 				else
 				{
 					l.add(d);
 					le.add(first);
+					debug2++;
 				}
 			}
 			float rep=Utils.max(l);
 			if (iter==itermax)
 			{
+				//System.out.println(bug+" "+debug+" "+debug2+" "+debug3+" "+actuel.id);
 				int indice=Utils.argmax(l);
 				Edge e=le.get(indice);
 				nextEdge=e;

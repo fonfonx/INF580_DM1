@@ -106,6 +106,45 @@ public class Edge implements Comparable<Edge>
 		place(coul);
 		return coul;
 	}
+	
+	public int sensunique(int coul)
+	{
+		if (DS)
+		{
+			return 0;
+		}
+		boolean pa=false;
+		boolean pb=false;
+		boolean pbb=false;
+		boolean paa=false;
+		for (int i=0; i<B.eAccess.size();i++)
+		{
+			if (/*B.eAccess.get(i).DS&&*/ (!B.eAccess.get(i).place&& B.eAccess.get(i).id!=id))
+			{
+				B.eAccess.get(i).place(coul);
+				pb=true;
+				break;
+				//if (!B.eAccess.get(i).DS) {B.eAccess.get(i).sensunique(coul);}
+			}
+			if (B.eAccess.get(i).isInSousGraphe(coul)) {pbb=true;}
+		}
+		
+		for (int i=0; i<A.eAccess.size();i++)
+		{
+			if (A.eAccess.get(i).DS&& (!A.eAccess.get(i).place) && A.eAccess.get(i).id!=id)
+			{
+				A.eAccess.get(i).place(coul);
+				pa=true;
+				break;
+			}
+			if (A.eAccess.get(i).isInSousGraphe(coul)) {paa=true;}
+		}
+		
+		int a=pa?1:0;
+		int b=pb?1:0;
+		if (!((pa||paa)&&(pb||pbb))) {System.out.println("raté!"+a+b);} //else {System.out.println("réussi!");}
+		return a+b;
+	}
 
 	/*@Override
 	public int compare(Edge arg0, Edge arg1) {
@@ -116,6 +155,15 @@ public class Edge implements Comparable<Edge>
 	@Override
 	public int compareTo(Edge arg0) {
 		// TODO Auto-generated method stub
-		return cout-arg0.cout;
+		if (DS&&arg0.DS || ((!DS)&&(!arg0.DS)))
+		{
+			return cout-arg0.cout;
+		}
+		else
+		{
+			return (!DS?1:-1);
+		}
+		//return cout-arg0.cout;
+		//return 0;
 	}
 }
