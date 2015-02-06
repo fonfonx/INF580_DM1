@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.*;
 
 
 public class Graph 
@@ -10,12 +11,12 @@ public class Graph
 	int T; //temps total
 	int C; //nombre de véhicules
 	int S; //indice du départ
-	
+
 	public static int INT(String s)
 	{
 		return Integer.parseInt(s);
 	}
-	
+
 	public static int[] INT(String[] tab)
 	{
 		int l=tab.length;
@@ -26,12 +27,12 @@ public class Graph
 		}
 		return rep;
 	}
-	
+
 	public static double DBL(String s)
 	{
 		return Double.parseDouble(s);
 	}
-	
+
 	public static double[] DBL(String[] tab)
 	{
 		int l=tab.length;
@@ -42,7 +43,7 @@ public class Graph
 		}
 		return rep;
 	}
-	
+
 	public void setDim(int n, int m, int t, int c, int s)
 	{
 		N=n;
@@ -53,7 +54,7 @@ public class Graph
 		V=new Vertex[n];
 		E=new Edge[m];
 	}
-	
+
 	public void setDim(String[] tabinits)
 	{
 		if (tabinits.length==5)
@@ -66,7 +67,7 @@ public class Graph
 			System.out.println("erreur d'init");
 		}
 	}
-	
+
 	//intialisation du graphe à partir d'un fichier texte
 	public void init(String fichier)
 	{
@@ -101,7 +102,7 @@ public class Graph
 						V[le[1]].addVoisin(e, V[le[0]]);
 					}
 				}
-				
+
 			}
 			br.close();
 		}
@@ -109,6 +110,166 @@ public class Graph
 			System.out.println("Erreur d'initialisation du graphe!");
 			System.out.println(e.getMessage());
 		}
-		
+
+	}
+
+	/********************************************
+	 ************METHODE MOINS NAIVE**************
+	 *********************************************/
+
+
+	//diviser le graphe en n composantes connexes
+	public void divise(int n)
+	{
+		//parcours du graphe
+		double latmin=90.0;
+		double latmax=0.0;
+		double longmin=90.0;
+		double longmax=0.0;
+		double lt;
+		double lg;
+		for (int i=0; i<N; i++)
+		{
+			lt=V[i].lat;
+			lg=V[i].lon;
+			if (lt>latmax) {latmax=lt;}
+			if (lt<latmin) {latmin=lt;}
+			if (lg>longmax) {longmax=lg;}
+			if (lg<longmin) {longmin=lg; }
+		}
+		double latmoy=(latmin+latmax)/2;
+		double longmoy=(longmin+longmax)/2;
+
+		double rayon=Math.sqrt((latmax-latmoy)*(latmax-latmoy)+(longmax-longmoy)*(longmax-longmoy));
+
+		File[] tab = new File[C];
+		tab[0] = new File ("paris1.txt");
+		tab[1] = new File ("paris2.txt");
+		tab[2] = new File ("paris3.txt");
+		tab[3] = new File ("paris4.txt");
+		tab[4] = new File ("paris5.txt");
+		tab[5] = new File ("paris6.txt");
+		tab[6] = new File ("paris7.txt");
+		tab[7] = new File ("paris8.txt");
+		//nb de rues et de croisements dans chaque quartier
+		int[] rues = new int[C];
+		int[] crois = new int[C];
+
+		Edge[] aretes=new Edge[M];
+		for (int i=0; i<M; i++)
+		{
+			aretes[i]=E[i];
+		}
+		Arrays.sort(aretes);
+
+		FileWriter[] tabfw = new FileWriter[8];
+		try{
+			for (int i=0; i<8; i++)
+			{
+				tabfw[i]=new FileWriter(tab[i]);
+			}
+			
+			PriorityQueue<Edge>[] voisins = (PriorityQueue<Edge>[]) new PriorityQueue[C];
+			for (int i=0; i<8; i++)
+			{
+				voisins[i]=new PriorityQueue<Edge>();
+			}
+			int[] debut = new int[C];
+			debut[0]=1293;
+			debut[1]=2579;
+			debut[2]=1714;
+			debut[3]=4673;
+			debut[4]=4985;
+			debut[5]=12379;
+			debut[6]=2349;
+			debut[7]=4600;
+			
+			Vertex a,b;
+			Edge e;
+			for (int k=0; k<C; k++)
+			{
+				e=E[debut[k]];
+				e.place(k);
+				a=e.A;
+				b=e.B;
+				voisins[k].addAll(a.eAccess);
+				voisins[k].addAll(b.eAccess);
+			}
+			
+			//calcul des tailles...
+			for (int i=0; i<N; i++)
+			{
+				for (int k=0; k<C; k++)
+				{
+					if (V[i].isInSousGraphe(k))
+					{
+						crois[k]++;
+					}
+				}
+			}
+			
+			for (int i=0; i<M; i++)
+			{
+				for (int k=0; k<C; k++)
+				{
+					if (E[i].isInSousGraphe(k))
+					{
+						rues[k]++;
+					}
+				}
+			}
+
+			//ecriture de la 1re ligne
+			for (int k=0; k<C; k++)
+			{
+				tabfw[k].write(crois[k]+" "+rues[k]+" "+T+" "+1+" "+0+"\n");
+			}
+
+			//ecriture des croisements
+			for (int k=0; k<C; k++)
+			{
+				int ligne=0;
+				for (int i=0; i<N; i++)
+				{
+					if (V[i].isInSousGraphe(k))
+					{
+						tabfw[k].write(V[i].lat+" "+V[i].lon+"\n");
+						V[i].indices[k]=ligne;
+						ligne++;
+					}
+				}
+			}
+
+			//ecriture des rues
+			for (int k=0; k<C; k++)
+			{
+				Edge e1;
+				int ds;
+				for (int i=0;i<M; i++)
+				{
+					e1=E[i];
+					ds=e1.DS?2:1;
+					if (!e1.place){	System.out.println(e1.place);}
+					if (e1.isInSousGraphe(k))
+					{
+						tabfw[k].write(e1.A.indices[k]+" "+e1.B.indices[k]+" "+ds+" "+e1.cout+" "+e1.dist+"\n");
+					}
+				}
+			}
+
+			for (int k=0; k<C; k++)
+			{
+				tabfw[k].close();
+			}
+
+			System.out.println("ecriture des fichiers paris finie");
+
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("Erreur d'écriture des fichiers paris intermédiaires");
+		}
+
 	}
 }

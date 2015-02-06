@@ -11,6 +11,12 @@ public class Vertex
 	List<Vertex> vAccess; //liste des noeuds accessibles
 	int visite;
 	
+	//pour la méthode moins naïve
+	int voitures;
+	int[] soustab;
+	int[] indices; //contient l'indice du croisement dans le nouveau fichier paris
+	
+	
 	public Vertex(int i, double la, double lo)
 	{
 		id=i;
@@ -19,6 +25,10 @@ public class Vertex
 		eAccess=new ArrayList<Edge>();
 		vAccess=new ArrayList<Vertex>();
 		visite=0;
+		voitures=8;
+		soustab=new int[voitures];
+		indices=new int[voitures];
+		
 	}
 	
 	public void addVoisin(Edge e, Vertex v)
@@ -50,6 +60,26 @@ public class Vertex
 	public float fracLibres()
 	{
 		return (float)nbLibres()/eAccess.size();
+	}
+	
+	//pour la partie moins naïve
+	public void setSousGraphe(int i)
+	{
+		soustab[i]++;
+	}
+	
+	public void setAllSousGraphes()
+	
+	{
+		for (int i=0; i<voitures; i++)
+		{
+			setSousGraphe(i);
+		}
+	}
+	
+	public boolean isInSousGraphe(int i)
+	{
+		return soustab[i]>=1;
 	}
 	
 	

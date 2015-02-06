@@ -6,8 +6,8 @@ public class Solution {
 		Graph g=new Graph();
 		g.init("paris_54000.txt");
 		System.out.println("Le graphe a été initialisé");
-		
 		//tableau des C voitures
+		System.out.println("Le graphe a été initialisé");
 		Car[] tab=new Car[g.C];
 		for (int i=0; i<g.C; i++)
 		{
