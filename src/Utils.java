@@ -4,8 +4,10 @@ public class Utils {
 
 	public final static int PROFONDEUR=12;
 	
+	//nom des voitures :)
 	public static String[] colors={"Fred","Greenlee","Pinkney","Bluebell","Willem","Greydom","Yellowsubmarine","SiriusBlack"};
 	
+	//maximum d'une liste de float
 	public static float max(List<Float> l)
 	{
 		if (l.size()==0)
@@ -23,6 +25,7 @@ public class Utils {
 		return max;
 	}
 	
+	//argmax d'une liste de float
 	public static int argmax(List<Float> l)
 	{
 		if (l.size()==0)

@@ -13,6 +13,7 @@ public class Algorithm
 		cars=cc;
 	}
 	
+	//création du fichier output.txt
 	public void output()
 	{
 		File f = new File ("output.txt");
@@ -66,11 +67,13 @@ public class Algorithm
 		}
 	}
 	
+	//algorithme glouton
 	public void run() throws Exception
 	{
 		int t=0;
 		while (t<g.T)
 		{
+			//état de l'avancée du programme
 			if (t%1000==0)
 			{
 				System.out.println((float)t/540+" %");

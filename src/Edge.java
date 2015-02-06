@@ -36,6 +36,7 @@ public class Edge
 		return Integer.toString(id);
 	}
 	
+	//extremité de l'arête autre que le sommet v
 	public Vertex autreExt(Vertex v) throws Exception
 	{
 		if (A==v)

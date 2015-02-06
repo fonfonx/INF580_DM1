@@ -5,7 +5,9 @@ public class Solution {
 		System.out.println("Construction du Graphe");
 		Graph g=new Graph();
 		g.init("paris_54000.txt");
-		System.out.println("Le graphe a été initié");
+		System.out.println("Le graphe a été initialisé");
+		
+		//tableau des C voitures
 		Car[] tab=new Car[g.C];
 		for (int i=0; i<g.C; i++)
 		{
@@ -29,7 +31,7 @@ public class Solution {
 				v++;
 			}
 		}
-		System.out.println("visite: "+v);
+		System.out.println("Noeuds visités: "+v);
 		
 		int dtot=0;
 		int ctot=0;
@@ -39,8 +41,8 @@ public class Solution {
 			ctot=ctot+g.E[i].cout;
 		}
 		
-		System.out.println("dist tot: "+dtot);
-		System.out.println("cout tot: "+ctot);
+		System.out.println("dist totale: "+dtot);
+		System.out.println("cout total: "+ctot);
 
 	}
 

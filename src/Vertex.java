@@ -33,6 +33,7 @@ public class Vertex
 		return s;
 	}
 	
+	//nombre de rues non visitées issues du sommet considéré
 	public int nbLibres()
 	{
 		int rep=0;

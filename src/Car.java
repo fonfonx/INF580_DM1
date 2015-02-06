@@ -48,6 +48,7 @@ public class Car
 		return onVertex;
 	}
 
+	//mise à jour de la position de la voiture et de la distance parcourue si elle arrive sur une intersection
 	public void updateNewVertex()
 	{
 		if (prop==edge.cout)
@@ -66,6 +67,7 @@ public class Car
 		}
 	}
 
+	//ajout d'une arêt et d'un noeud au trajet de la voiture
 	public void add(Edge e, Vertex v)
 	{
 		if (v==e.B || v==e.A)
@@ -82,20 +84,17 @@ public class Car
 		}
 	}
 
+	//fonction de l'heuristique, récursive
 	public float interet(Vertex actuel, int iter, int itermax, int dist, int cout, Edge first) throws Exception
 	{
 		if (iter==0)
 		{
-			if (cout==0)
-			{
-				System.out.println("BUUUUUUUUUUUUUUUUUUG");
-			}
 			return (float)dist/(float)cout;
 		}
 		else
 		{
-			ArrayList<Float> l=new ArrayList<Float>();
-			ArrayList<Edge> le= new ArrayList<Edge>();
+			ArrayList<Float> l=new ArrayList<Float>(); //liste des valeurs des chemins calculés
+			ArrayList<Edge> le= new ArrayList<Edge>(); //liste des chemins correspondants
 			Edge ea;
 			boolean ancienVisite;
 			for (int i=0; i<actuel.eAccess.size();i++)
@@ -105,13 +104,15 @@ public class Car
 				{
 					first=ea;
 				}
-				//booleen indiquant si une arête non explorée est libre
+				
+				//booleen indiquant si une intersection a des rues non visitées
 				boolean libre=(actuel.nbLibres()>=1);
-				int visite=(ea.virtualVisite || ea.visite)?0:1;
+				int visite=(ea.virtualVisite || ea.visite)?0:1;  //1 si la rue n'a pas été visitée
 				//coef multiplicatif pour l'heuristique
 				float coef=libre?5.0f:1.0f;
 				coef=coef/(actuel.vAccess.get(i).visite+1);
 				coef=coef*(1.0f+(float)iter/4.0f);
+				
 				ancienVisite=ea.virtualVisite;
 				ea.virtualVisite=true;
 				float d=coef*interet(actuel.vAccess.get(i),iter-1, itermax, dist+visite*ea.dist,cout+ea.cout,first);
@@ -133,6 +134,7 @@ public class Car
 			float rep=Utils.max(l);
 			if (iter==itermax)
 			{
+				//choix glouton
 				int indice=Utils.argmax(l);
 				Edge e=le.get(indice);
 				nextEdge=e;
@@ -145,6 +147,7 @@ public class Car
 		}
 	}
 
+	//déplacement suivant de la voiture i
 	public void nextMove(int t, int i) throws Exception
 	{
 		if (onVertex)

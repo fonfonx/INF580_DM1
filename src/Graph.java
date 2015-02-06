@@ -67,6 +67,7 @@ public class Graph
 		}
 	}
 	
+	//intialisation du graphe à partir d'un fichier texte
 	public void init(String fichier)
 	{
 		try{
