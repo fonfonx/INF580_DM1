@@ -1,7 +1,9 @@
 # INF580_DM1
-1er DM du cours INF580 (Programmation par Contraintes) dont le sujet est tiré du Google HashCode d'Avril 2014.
+This is the source code of the 1st homework for the course INF580 (Constraint Programming) at Ecole polytechnique. The subject comes from the April 2014 Google HashCode.
 
-## Mode d'utilisation
+## How to use the code
 
+The project has been done with Eclipse.
+`Solution.java` contains the main function and creates an `output.txt` file which contains the solution. In order to output it you have to run the command `python devoirMaison.py paris_54000.txt output.txt`. This creates an `output.gpx` file.
 Le projet a été réalisé sous Eclipse.
-Le fichier contenant la fonction main est Solution.java. Son exécution crée un fichier output.txt qui contient la solution. Pour l'afficher, il faut lancer le script python devoirMaison.py avec en premier argument paris_54000.txt et en deuxième argument output.txt. Cela va créer un fichier ouput.gpx.
+
